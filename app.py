@@ -72,7 +72,12 @@ def login():
         session['full_name'] = user.full_name  
         session['user_id'] = user.id
         session['email'] = user.email 
-        return jsonify({'message': 'Logged in successfully'}), 200
+        return jsonify({
+            'message': 'Logged in successfully',
+            'full_name': user.full_name,
+            'email': user.email,
+            'user_id': user.id
+        }), 200
     else:
         return jsonify({'message': 'Invalid credentials'}), 401
 
@@ -84,9 +89,9 @@ def logout():
     session.pop('email', None)
     return jsonify({'message': 'Logged out successfully'}), 200
 
-@app.route('/api/protected', methods=['GET'])
+@app.route('/api/user', methods=['GET'])
 @login_required
-def protected():
+def get_user():
     user_id = session.get('user_id')
     user = User.query.get(user_id)
 
